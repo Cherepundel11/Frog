@@ -1,0 +1,34 @@
+#include <iostream>
+#include <cmath>  // для мат. функций
+
+using namespace std;
+
+int main() {
+    int X;
+
+    // Вводим число
+    cout << "Введите целое число X: ";
+    cin >> X;
+
+    // Вычисление противоположного числа
+    int opp = -X;
+
+    // Вычисляем корень 2-й степени
+    double two_value = sqrt(abs(X));  // берем модуль для отрицательных чисел
+
+    // Вычисляем корень 5-й степени
+    double fifth_root;
+    if (X >= 0) {
+        fifth_root = pow(X, 1.0 / 5.0);
+    }
+    else {
+        fifth_root = -pow(-X, 1.0 / 5.0);  // для отрицательных чисел
+    }
+    // Вывод
+    cout << "Исходное число: " << X << endl;
+    cout << "Противоположное число: " << opp << endl;
+    cout << "Корень 2-й степени: " << two_value << endl;
+    cout << "Корень 5-й степени: " << fifth_root << endl;
+
+    return 0;
+}
