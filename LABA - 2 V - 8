@@ -1,0 +1,72 @@
+#include <iostream>
+#include <bitset>
+
+using namespace std;
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    std::cout << "Задание 1" << endl;
+
+    //Работа с битами
+    int A;
+    int i;
+    std::cout << "Введите число A: ";
+    std::cin >> A;
+    bitset<8>b = A;
+    std::cout << b << endl;//выводит первые 8 бит
+    std::cout << "Введите номер бита(0-7): ";
+    std::cin >> i;
+
+    // Проверка корректности ввода бита
+    if (i < 0 || i > 7) { //----изменить не до 31-----
+        std::cout << "Ошибка: бит должен быть в диапазоне 0-7" << endl;
+    }
+    else {
+        // Проверка i-го бита
+        int bet = (A >> i) & 1;
+
+        if (bet != 0) { //проверяет не равен ли i бит 0
+            int bi = A & 5;
+            std::cout << "Условие 1: " << endl;
+            std::cout << (bi) << endl;//умножение по битам
+            std::cout << bitset<8>(bi);
+        }
+        else
+        {
+            int env = ~A;
+            std::cout << endl;
+            std::cout << "Условие 2: " << endl;
+            std::cout << (env) << endl;//Инвертированное число
+            std::cout << bitset<8>(env) << endl;//Двоичное представление инвертированного числа
+        }        
+    }
+
+
+    cout << "Задание 2" << endl;
+
+    // Задание 2: Чит-коды для игры Bounce
+    int N;
+    int z;
+    cout << "Введите чит-код: ";
+    cin >> N;
+
+    switch (N) {
+    case 787898:
+        cout << "Чит-код 0: Бессмертие" << endl;
+        break;
+    case 787899:
+        cin >> z;
+        switch (z) {
+        case 1: cout << "Понижение уровня";
+            break;
+        case 3: cout << "Повышение уровня";
+            break;
+        case 5: cout << "Повышение уровня с максимальным счётом.";
+            break;
+        }
+        break;
+    default: cout << "Код не найден";
+    }
+    return 0;
+}
