@@ -1,0 +1,69 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+
+    // Задание 1 
+
+    cout << "Введите N" << endl;
+    int n;
+    cin >> n;
+    int numCnt = 0;
+    int minNumCnt = -1;
+    int sum = 0;
+    int max = -2147483647;
+    for (n; n > 0; --n) {
+        ++numCnt;
+        cout << "Введите " << numCnt << "-е число:" << endl;
+        int num;
+        cin >> num;
+        if (abs(num) % 10 == 2) {
+            sum += num;
+            if (num >= max) {
+                max = num;
+                minNumCnt = numCnt;
+            }
+
+        }
+    }
+    if (minNumCnt != -1) {
+        cout << "Сумма чисел = " << sum << endl;
+        cout << "Максимальный элемент = " << max << endl;
+        cout << "Номер максимального элемента = " << minNumCnt << endl;
+        cout << "Конец" << endl;
+    }
+    else {
+        cout << "Нет подходящего числа" << endl;
+        cout << "Конец" << endl;
+    }
+
+    // Задание 2
+    int X;
+    cout << "Введите целое число X (|X| < 1000): ";
+    cin >> X;
+
+    if (abs(X) >= 1000) {
+        cout << "Ошибка: |X| должно быть меньше 1000." << endl;
+        return 1;
+    }
+
+    // Определение знака
+    int sign = (X < 0) ? -1 : 1;
+    int abs_X = abs(X);
+
+    // Построение зеркального числа с помощью цикла while
+    int reversed = 0;
+    while (abs_X > 0) {
+        int digit = abs_X % 10;
+        reversed = reversed * 10 + digit;
+        abs_X /= 10;
+    }
+
+    // Применение знака
+    int mirror = sign * reversed;
+
+    cout << "Зеркальное отражение числа " << X << " с сохранением знака: " << mirror << endl;
+
+}
