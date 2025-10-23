@@ -1,0 +1,130 @@
+#include <iostream>
+#include <clocale>
+#include <limits> 
+
+using namespace std;
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+
+    // Пункт 1: Упорядочить массив по возрастанию, если сумма первых 3-х чисел больше 100
+    cout << "Задание 1" << endl;
+
+    const int N = 8 + 3; // Размер массива: N варианта + 3 = 8 + 3 = 11
+    int arr[N];
+
+    cout << "Введите " << N << " элементов массива:" << endl;
+    for (int i = 0; i < N; i++) {
+        cout << "arr[" << i << "] = ";
+        cin >> arr[i];
+    }
+
+    // Вывод исходного массива
+    cout << "\nИсходный массив: ";
+    for (int i = 0; i < N; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+
+    // Проверка
+    int sum_first_three = arr[0] + arr[1] + arr[2];
+    cout << "Сумма первых трёх элементов: " << sum_first_three << endl;
+
+    if (sum_first_three > 100) {
+        // Сортировка массива по возрастанию 
+        for (int i = 0; i < N - 1; i++) {
+            for (int j = 0; j < N - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    // Обмен элементов
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+        cout << "Массив упорядочен по возрастанию (сумма первых трёх > 100)" << endl;
+    }
+    else {
+        cout << "Массив не изменён (сумма первых трёх <= 100)" << endl;
+    }
+
+    // Вывод результирующего массива
+    cout << "Результирующий массив: ";
+    for (int i = 0; i < N; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+
+    // Пункт 2: Найти столбец с максимальной суммой отрицательных чисел и обнулить его
+    cout << "\nЗадание 2" << endl;
+
+    const int R = 3;
+    const int C = 4;
+    int matrix[R][C];
+
+    cout << "Введите элементы матрицы " << R << "x" << C << ":" << endl;
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            cout << "matrix[" << i << "][" << j << "] = ";
+            cin >> matrix[i][j];
+        }
+    }
+
+    // Вывод исходной матрицы
+    cout << "\nИсходная матрица:" << endl;
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            cout << matrix[i][j] << "\t";
+        }
+        cout << endl;
+    }
+
+    // Поиск столбца с максимальной суммой отрицательных чисел
+    int max_negative_sum = numeric_limits<int>::min(); // Более корректный способ
+    int target_column = -1;
+
+    for (int j = 0; j < C; j++) {
+        int negative_sum = 0;
+        bool has_negative = false;
+
+        // Считаем сумму отрицательных чисел в столбце
+        for (int i = 0; i < R; i++) {
+            if (matrix[i][j] < 0) {
+                negative_sum += matrix[i][j];
+                has_negative = true;
+            }
+        }
+
+        // Если в столбце есть отрицательные числа и сумма больше текущей максимальной
+        if (has_negative && (target_column == -1 || negative_sum > max_negative_sum)) {
+            max_negative_sum = negative_sum;
+            target_column = j;
+        }
+    }
+
+    if (target_column != -1) {
+        cout << "Столбец с максимальной суммой отрицательных чисел: " << target_column << endl;
+        cout << "Сумма отрицательных чисел в этом столбце: " << max_negative_sum << endl;
+
+        // Обнуляем найденный столбец
+        for (int i = 0; i < R; i++) {
+            matrix[i][target_column] = 0;
+        }
+
+        cout << "Столбец " << target_column << " обнулён." << endl;
+    }
+    else {
+        cout << "В матрице нет отрицательных чисел." << endl;
+    }
+
+    // Вывод результирующей матрицы
+    cout << "\nРезультирующая матрица:" << endl;
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            cout << matrix[i][j] << "\t";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
