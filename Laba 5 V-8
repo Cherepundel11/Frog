@@ -1,0 +1,131 @@
+#include <iostream>
+#include <cmath>
+#include <clocale>
+
+using namespace std;
+
+// Функция для числа - возвращает ближайшее кратное 5
+int function_one_number(int a) {
+    cout << "исп. функция для одного числа (ближайшее кратное 5)" << endl;
+
+    
+    int remainder = a % 5;
+    if (remainder == 0) {
+        return a;
+    }
+    else if (remainder <= 2) {
+        return a - remainder; // Ближайшее меньшее
+    }
+    else {
+        return a + (5 - remainder); // Ближайшее большее
+    }
+}
+
+int function_two_numbers(int a, int b) {
+    cout << "исп. функция для двух чисел (сумма)" << endl;
+    return a + b;
+}
+
+int function_three_numbers(int a, int b, int c) {
+    cout << "исп. функция для трех чисел (сумма макс и мин)" << endl;
+
+    int max_num = a;
+    int min_num = a;
+
+    // Находим макс. число
+    if (b > max_num) max_num = b;
+    if (c > max_num) max_num = c;
+
+    // Находим мин. число
+    if (b < min_num) min_num = b;
+    if (c < min_num) min_num = c;
+
+    return max_num + min_num;
+}
+
+// Функция для определения количества ненулевых чисел
+int count_non_zero_numbers(int a, int b, int c) {
+    int count = 0;
+    if (a != 0) count++;
+    if (b != 0) count++;
+    if (c != 0) count++;
+    return count;
+}
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+
+    int choice;
+
+    cout << "=== ЛАБОРАТОРНАЯ РАБОТА №5 ===" << endl;
+    cout << "Выберите пункт для выполнения (1 или 2): ";
+    cin >> choice;
+
+    if (choice == 1) {
+        cout << "\n=== ПУНКТ 1 ===" << endl;
+        cout << "Введите три целых числа (при = 0, считаем что его нет):" << endl;
+
+        int a, b, c;
+        cout << "Введите первое число: ";
+        cin >> a;
+        cout << "Введите второе число: ";
+        cin >> b;
+        cout << "Введите третье число: ";
+        cin >> c;
+
+        // Определяем количество ненулевых чисел
+        int non_zero_count = count_non_zero_numbers(a, b, c);
+        cout << "\nКоличество ненулевых чисел: " << non_zero_count << endl;
+
+        int result;
+
+        // Вызываем соответствующую функцию в зависимости от количества ненулевых чисел
+        switch (non_zero_count) {
+        case 1:
+            // Находим ненулевое число
+            if (a != 0) result = function_one_number(a);
+            else if (b != 0) result = function_one_number(b);
+            else result = function_one_number(c);
+            break;
+
+        case 2:
+            // Находим два ненулевых числа
+            if (a == 0) result = function_two_numbers(b, c);
+            else if (b == 0) result = function_two_numbers(a, c);
+            else result = function_two_numbers(a, b);
+            break;
+
+        case 3:
+            result = function_three_numbers(a, b, c);
+            break;
+
+        default:
+            cout << "Все числа равны 0!" << endl;
+            return 1;
+        }
+
+        cout << "Результат: " << result << endl;
+
+    }
+    else if (choice == 2) {
+        cout << "\n=== ПУНКТ 2 ===" << endl;
+        cout << "Обобщенное упрощенное задание:" << endl;
+        cout << "Введите два числа для вычисления их суммы:" << endl;
+
+        int x, y;
+        cout << "Введите первое число: ";
+        cin >> x;
+        cout << "Введите второе число: ";
+        cin >> y;
+
+        cout << "исп. функция для двух чисел (сумма)" << endl;
+        cout << "Результат: " << (x + y) << endl;
+
+    }
+    else {
+        cout << "Ошибка: выбран неверный пункт!" << endl;
+        return 1;
+    }
+
+    return 0;
+}
