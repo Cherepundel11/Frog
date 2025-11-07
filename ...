@@ -1,0 +1,12 @@
+void task2(unsigned short  didj) {
+
+    long long x1 = -didj;
+    cout << "Обратное число для х: ";
+    cout << x1;
+    double x2 = sqrt(didj);
+    double x5 = pow(didj, 1.0 / 5);
+    cout << endl;
+    cout << "Степени 2-я: " << x2 << " и 5-я: " << x5 << endl;
+    cout << "long long, занимает " << sizeof(x1) * 8 << " бит(а), мин.значение: " << numeric_limits<long long>::lowest() << " макс.значение = " << numeric_limits<long long>::max() << endl;
+    cout << "double, занимает " << sizeof(x2) * 8 << " бит(а), мин.значение: " << numeric_limits<double>::lowest() << " макс.значение = " << numeric_limits<double>::max() << endl; 
+}
