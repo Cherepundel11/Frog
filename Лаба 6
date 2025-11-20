@@ -1,0 +1,227 @@
+#include <iostream>
+#include <cstdlib>
+
+// Пункт 1
+int* findZeroes(int** matrix, int Rows, int Cols, int* zeroRowsCount) {
+    int* temp = (int*)malloc(Rows * sizeof(int));
+    *zeroRowsCount = 0;
+    if (temp == NULL) {
+        return NULL;
+    }
+    for (int i = 0; i < Rows; i++) {
+        int isZero = 0;
+        for (int j = 0; j < Cols; j++) {
+            if (matrix[i][j] == 0) {
+                isZero = 1;
+                break;
+            }
+        }
+        if (isZero) {
+            temp[(*zeroRowsCount)++] = i;
+        }
+    }
+
+    int* zeroRows = (int*)malloc((*zeroRowsCount) * sizeof(int));
+    if (zeroRows == NULL) {
+        free(temp);
+        *zeroRowsCount = 0;
+        return NULL;
+    }
+
+    for (int i = 0; i < *zeroRowsCount; i++) {
+        zeroRows[i] = temp[i];
+        std::cout << "Row with zero: " << zeroRows[i] << std::endl;
+    }
+
+    free(temp);
+    return zeroRows;
+}
+
+int* deleteRows(int** matrix, int rows, int cols, int* zeroRows, int zeroRowsCount, int* newRows) {
+    *newRows = rows - zeroRowsCount;
+
+    int* newMatrix = (int*)malloc((*newRows) * cols * sizeof(int));
+    if (newMatrix == NULL) {
+        *newRows = 0;
+        return NULL;
+    }
+
+    int newRow = 0;
+    for (int i = 0; i < rows; i++) {
+        bool skip = false;
+        for (int j = 0; j < zeroRowsCount; j++) {
+            if (i == zeroRows[j]) {
+                skip = true;
+                break;
+            }
+        }
+
+        if (!skip) {
+            for (int k = 0; k < cols; k++) {
+                int newIndex = newRow * cols + k;
+                newMatrix[newIndex] = matrix[i][k];
+            }
+            newRow++;
+        }
+    }
+
+    return newMatrix;
+}
+
+// Пункт 2
+void processPointers() {
+    int a1, b1;
+    std::cout << "Enter A:" << std::endl;
+    std::cin >> a1;
+    std::cout << "Enter B:" << std::endl;
+    std::cin >> b1;
+
+    std::cout << "A: " << a1 << std::endl;
+    std::cout << "B: " << b1 << std::endl;
+
+    int* pa1 = new int(a1);
+    int* pb1 = new int(b1);
+
+    *pa1 *= 2;
+    a1 = *pa1;
+    std::cout << "New A: " << a1 << std::endl;
+
+    int temp = *pa1;
+    *pa1 = *pb1;
+    *pb1 = temp;
+
+    a1 = *pa1;
+    b1 = *pb1;
+
+    std::cout << "A: " << a1 << std::endl;
+    std::cout << "B: " << b1 << std::endl;
+
+    delete pa1;
+    delete pb1;
+}
+
+int main(void) {
+    int choice;
+    std::cout << "Choose program part (1 or 2): ";
+    std::cin >> choice;
+
+    if (choice == 1) {
+        // Пункт 1
+        int A, B, C, D;
+
+        std::cout << "Enter A:" << std::endl;
+        std::cin >> A;
+        while (A < 0) {
+            std::cout << "Incorrect input" << std::endl;
+            std::cout << "Enter A:" << std::endl;
+            std::cin >> A;
+        }
+        std::cout << "Enter B:" << std::endl;
+        std::cin >> B;
+        while (B < 0) {
+            std::cout << "Incorrect input" << std::endl;
+            std::cout << "Enter B:" << std::endl;
+            std::cin >> B;
+        }
+        std::cout << "Enter C:" << std::endl;
+        std::cin >> C;
+        std::cout << "Enter D:" << std::endl;
+        std::cin >> D;
+
+        // Создание исходной матрицы 2x2
+        int** matrix = (int**)malloc(2 * sizeof(int*));
+        for (int i = 0; i < 2; i++) {
+            matrix[i] = (int*)malloc(2 * sizeof(int));
+        }
+
+        matrix[0][0] = A;
+        matrix[0][1] = B;
+        matrix[1][0] = C;
+        matrix[1][1] = D;
+
+        std::cout << "Original matrix:" << std::endl;
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                std::cout << matrix[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+
+        // Создание расширенной матрицы
+        int newRows = 2 + A;
+        int newCols = 2 + B;
+
+        int** newMatrix = (int**)malloc(newRows * sizeof(int*));
+        for (int i = 0; i < newRows; i++) {
+            newMatrix[i] = (int*)malloc(newCols * sizeof(int));
+        }
+
+        // Заполнение расширенной матрицы
+        for (int i = 0; i < newRows; i++) {
+            for (int j = 0; j < newCols; j++) {
+                if (i >= A && j >= B) {
+                    newMatrix[i][j] = matrix[i - A][j - B];
+                }
+                else {
+                    newMatrix[i][j] = i * C + j * D;
+                }
+            }
+        }
+
+        // Освобождение памяти исходной матрицы
+        for (int i = 0; i < 2; i++) {
+            free(matrix[i]);
+        }
+        free(matrix);
+
+        std::cout << "New matrix:" << std::endl;
+        for (int i = 0; i < newRows; i++) {
+            for (int j = 0; j < newCols; j++) {
+                std::cout << newMatrix[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+
+        // Поиск строк с нулями
+        int zeroRowsCount;
+        int* zeroRows = findZeroes(newMatrix, newRows, newCols, &zeroRowsCount);
+
+        // Удаление строк с нулями
+        int finalRows;
+        int* finalMatrix = deleteRows(newMatrix, newRows, newCols, zeroRows, zeroRowsCount, &finalRows);
+
+        // Освобождение памяти новой матрицы
+        for (int i = 0; i < newRows; i++) {
+            free(newMatrix[i]);
+        }
+        free(newMatrix);
+
+        std::cout << "New matrix without zeroes" << std::endl;
+        if (finalMatrix != NULL) {
+            for (int i = 0; i < finalRows; i++) {
+                for (int j = 0; j < newCols; j++) {
+                    int index = i * newCols + j;
+                    std::cout << finalMatrix[index] << " ";
+                }
+                std::cout << std::endl;
+            }
+            free(finalMatrix);
+        }
+
+        // Освобождаем zeroRows
+        if (zeroRows != NULL) {
+            free(zeroRows);
+        }
+
+    }
+    else if (choice == 2) {
+        // Пункт 2
+        processPointers();
+    }
+    else {
+        std::cout << "Invalid choice!" << std::endl;
+        return 1;
+    }
+
+    return 0;
+}
