@@ -1,0 +1,103 @@
+#include "Potion.h"
+#include <iostream>
+
+void printSeparator(const std::string& title) {
+    std::cout << "\n" << std::string(50, '=') << std::endl;
+    std::cout << "=== " << title << " ===" << std::endl;
+    std::cout << std::string(50, '=') << std::endl;
+}
+
+int main() {
+    setlocale(LC_ALL, "Russian"); // Для вывода на русском в Windows
+    
+    printSeparator("СОЗДАНИЕ ИСХОДНЫХ ЗЕЛИЙ");
+    
+    // Создаем два зелья с разными ингредиентами
+    std::vector<std::string> ingredientsA = { "корень мандрагоры", "глаз тритона", "чешуя дракона", "сера" };
+    std::vector<std::string> ingredientsB = { "чешуя дракона", "сера", "крыло летучей мыши" };
+    
+    Potion potionA("Эликсир силы", "вода", 20, ingredientsA);
+    Potion potionB("Зелье невидимости", "масло", 10, ingredientsB);
+    
+    std::cout << "Зелье A:" << std::endl;
+    potionA.print();
+    
+    std::cout << "Зелье B:" << std::endl;
+    potionB.print();
+    
+    printSeparator("ТЕСТ ОПЕРАТОРА + (СМЕШИВАНИЕ)");
+    
+    // Демонстрация оператора +
+    Potion potionC = potionA + potionB;
+    std::cout << "Результат potionA + potionB:" << std::endl;
+    potionC.print();
+    
+    printSeparator("ТЕСТ ОПЕРАТОРА * (ТРАНСМУТАЦИЯ)");
+    
+    // Демонстрация оператора *
+    Potion potionD = potionA * potionB;
+    std::cout << "Результат potionA * potionB:" << std::endl;
+    potionD.print();
+    
+    printSeparator("ТЕСТ КОПИРОВАНИЯ");
+    
+    // Копирующий конструктор
+    std::cout << "Создаем potionE как копию potionC:" << std::endl;
+    Potion potionE = potionC; // копирующий конструктор
+    potionE.print();
+    
+    printSeparator("ТЕСТ ПЕРЕМЕЩЕНИЯ");
+    
+    // Перемещающий конструктор
+    std::cout << "Создаем potionF перемещением из potionD:" << std::endl;
+    Potion potionF = std::move(potionD); // перемещающий конструктор
+    potionF.print();
+    
+    // Проверяем, что potionD теперь пустой (перемещенный)
+    std::cout << "Состояние potionD после перемещения:" << std::endl;
+    potionD.print();
+    
+    printSeparator("ТЕСТ ПРИСВАИВАНИЯ");
+    
+    // Копирующее присваивание
+    std::cout << "Присваиваем potionA = potionB:" << std::endl;
+    potionA = potionB; // копирующее присваивание
+    potionA.print();
+    
+    // Перемещающее присваивание
+    std::cout << "Присваиваем potionB = std::move(potionC):" << std::endl;
+    potionB = std::move(potionC); // перемещающее присваивание
+    potionB.print();
+    
+    printSeparator("ТЕСТ ЦЕПОЧКИ ОПЕРАЦИЙ");
+    
+    // Демонстрация сложных выражений
+    Potion potionG("База", "спирт", 5, { "трава", "камень" });
+    Potion potionH("Добавка", "вода", 3, { "камень", "кровь" });
+    
+    std::cout << "Сложное выражение: (potionG + potionH) * potionG" << std::endl;
+    Potion potionI = (potionG + potionH) * potionG;
+    potionI.print();
+    
+    printSeparator("ТЕСТ САМОПРИСВАИВАНИЯ");
+    
+    // Проверка защиты от самоприсваивания
+    std::cout << "Пробуем potionG = potionG:" << std::endl;
+    potionG = potionG; // должно сработать без ошибок
+    potionG.print();
+    
+    printSeparator("ДЕМОНСТРАЦИЯ РАБОТЫ ДЕСТРУКТОРОВ");
+    
+    std::cout << "Создаем временное зелье в блоке:" << std::endl;
+    {
+        Potion temp("Временное", "вода", 1, { "пыль", "пепел" });
+        temp.print();
+        std::cout << "Выходим из блока - деструктор сработает автоматически" << std::endl;
+    }
+    
+    printSeparator("КОНЕЦ ПРОГРАММЫ");
+    
+    std::cout << "Завершение main() - все оставшиеся объекты будут уничтожены" << std::endl;
+    
+    return 0;
+}
