@@ -1,0 +1,38 @@
+#ifndef POTION_H
+#define POTION_H
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+class Potion {
+private:
+    std::string name;
+    std::string base;
+    int volume;
+    std::vector<std::string> ingredients;
+
+public:
+    // Конструкторы
+    Potion();
+    Potion(const std::string& name, const std::string& base, int volume, const std::vector<std::string>& ingredients);
+    Potion(const Potion& other); // копирующий конструктор
+    Potion(Potion&& other) noexcept; // перемещающий конструктор
+
+    // Деструктор
+    ~Potion();
+
+    // Операторы присваивания
+    Potion& operator=(const Potion& other); // копирующий
+    Potion& operator=(Potion&& other) noexcept; // перемещающий
+
+    // Перегруженные операторы
+    Potion operator+(const Potion& other) const; // +
+    Potion operator*(const Potion& other) const; // *
+
+    // Вспомогательные методы
+    void print() const;
+    static std::string randomBase();
+};
+
+#endif
