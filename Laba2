@@ -1,0 +1,113 @@
+#include "Potion.h"
+#include <algorithm>
+#include <random>
+
+// Статический генератор случайной основы
+std::string Potion::randomBase() {
+    static const char* bases[] = { "вода", "масло", "спирт", "кровь", "эфир" };
+    static std::mt19937 rng(std::random_device{}());
+    static std::uniform_int_distribution<int> dist(0, 4);
+    return bases[dist(rng)];
+}
+
+// Конструктор по умолчанию
+Potion::Potion() : name("Unknown"), base("вода"), volume(0) {}
+
+// Параметризованный конструктор
+Potion::Potion(const std::string& name, const std::string& base, int volume, const std::vector<std::string>& ingredients)
+    : name(name), base(base), volume(volume), ingredients(ingredients) {}
+
+// Копирующий конструктор
+Potion::Potion(const Potion& other)
+    : name(other.name), base(other.base), volume(other.volume), ingredients(other.ingredients) {
+    std::cout << "Potion скопирован (конструктор копирования)\n";
+}
+
+// Перемещающий конструктор
+Potion::Potion(Potion&& other) noexcept
+    : name(std::move(other.name)), base(std::move(other.base)), volume(other.volume), ingredients(std::move(other.ingredients)) {
+    other.volume = 0;
+    std::cout << "Potion перемещён (конструктор перемещения)\n";
+}
+
+// Деструктор
+Potion::~Potion() {
+    if (!ingredients.empty()) {
+        ingredients.clear(); // показываем, что работаем с динамической памятью
+    }
+    std::cout << "Potion \"" << name << "\" уничтожен, вектор очищен\n";
+}
+
+// Копирующее присваивание
+Potion& Potion::operator=(const Potion& other) {
+    std::cout << "Potion operator= (копирование)\n";
+    if (this == &other) return *this;
+    name = other.name;
+    base = other.base;
+    volume = other.volume;
+    ingredients = other.ingredients;
+    return *this;
+}
+
+// Перемещающее присваивание
+Potion& Potion::operator=(Potion&& other) noexcept {
+    std::cout << "Potion operator= (перемещение)\n";
+    if (this == &other) return *this;
+    name = std::move(other.name);
+    base = std::move(other.base);
+    volume = other.volume;
+    ingredients = std::move(other.ingredients);
+    other.volume = 0;
+    return *this;
+}
+
+// Оператор +
+Potion Potion::operator+(const Potion& other) const {
+    std::string newName = (volume > other.volume) ? name + "+обн." : other.name + "+обн.";
+    if (volume == other.volume) newName = name + "+" + other.name; // на усмотрение
+
+    std::string newBase = (volume >= other.volume) ? base : other.base;
+
+    int newVolume = volume + other.volume;
+
+    std::vector<std::string> newIngredients = ingredients;
+    for (const auto& ing : other.ingredients) {
+        if (std::find(newIngredients.begin(), newIngredients.end(), ing) != newIngredients.end()) {
+            newIngredients.push_back(ing + " доп");
+        } else {
+            newIngredients.push_back(ing);
+        }
+    }
+
+    return Potion(newName, newBase, newVolume, newIngredients);
+}
+
+// Оператор *
+Potion Potion::operator*(const Potion& other) const {
+    std::string newBase = randomBase();
+    int newVolume = static_cast<int>((volume + other.volume) * 0.8);
+
+    std::vector<std::string> common;
+    for (const auto& ing1 : ingredients) {
+        for (const auto& ing2 : other.ingredients) {
+            if (ing1 == ing2) {
+                common.push_back(ing1);
+                break;
+            }
+        }
+    }
+    common.push_back("хвост");
+    common.push_back("вода");
+
+    return Potion("K", newBase, newVolume, common);
+}
+
+// Печать
+void Potion::print() const {
+    std::cout << "Название: " << name << "\nОснова: " << base << "\nОбъём: " << volume << " мл\nИнгредиенты: ";
+    for (size_t i = 0; i < ingredients.size(); ++i) {
+        std::cout << ingredients[i];
+        if (i != ingredients.size() - 1) std::cout << ", ";
+    }
+    std::cout << "\n\n";
+}
